@@ -13,7 +13,7 @@ export const SplashScreen = ({ navigation }) => {
             <View style={styles.footer}>
                 <Text style={styles.title}>You Are Welcome To MJ Money Link</Text>
                 <Text style={styles.text}>Create an account </Text>
-                <TouchableOpacity style={styles.button} onPress={() => alert("Login page")} >
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")} >
                     <Text style={styles.btnText}>Get started</Text>
                     <MaterialIcons name="navigate-next" size={20} color="#fff" />
                 </TouchableOpacity>

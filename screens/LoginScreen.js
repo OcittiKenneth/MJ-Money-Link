@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, TextInput, StatusBar } from 'react-native';
 
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as animatable from 'react-native-animatable';
+import { AuthContext } from "../components/Context";
 
-export const LoginScreen = () => {
+
+export const LoginScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
         phone: '',
         password: "",
-        secureTextEntry: true
+        secureTextEntry: true,
+        isValidUser: true,
+        isValidPassword: true
     })
+
+    const { signIn } = useContext(AuthContext)
+
+    const loginHandler = (phone, password) => {
+        signIn(phone, password);
+    }
 
     const textInputChange = (val) => {
         return (
@@ -36,12 +46,25 @@ export const LoginScreen = () => {
             secureTextEntry: !data.secureTextEntry
         })
     }
+
+    const handleValidUser = (val) => {
+        if (val.trim().length >= 4) {
+            setData({
+                ...data,
+                isValidUser: true
+            })
+        } else {
+            setData({
+                ...data,
+                isValidUser: false
+            })
+        }
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <View style={styles.header}>
-                {/* <Image style={styles.logo} source={require('../assets/loan1.png')} /> */}
-                {/* <Text style={styles.text_header}>MJ Money Link</Text> */}
                 <Text style={[styles.text_header, { marginBottom: -35, marginTop: 30, fontWeight: "normal", alignSelf: "flex-start" }]}>Welcome! </Text>
 
             </View >
@@ -54,12 +77,19 @@ export const LoginScreen = () => {
                         style={styles.textInput}
                         placeholder="Your Phone Number"
                         onChangeText={(val) => textInputChange(val)}
+                        onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
                     />
 
                     {data.check_textInputChange ?
                         <Feather name="eye-off" color="gray" size={20} />
                         : null}
                 </View>
+                {data.isValidUser ? null :
+                    <animatable.View animation="fadeInLeft" duration={500}>
+                        <Text>phone required</Text>
+                    </animatable.View>}
+
+
                 <Text style={[styles.textFooter, { marginTop: 35 }]}>Password</Text>
                 <View style={styles.action}>
                     <FontAwesome name="lock" color="#05375a" size={20} />
@@ -77,10 +107,14 @@ export const LoginScreen = () => {
                         }
                     </TouchableOpacity>
                 </View>
+                {data.isValidPassword ? null :
+                    <animatable.View animation="fadeInLeft" duration={500}>
+                        <Text>phone password</Text>
+                    </animatable.View>}
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                        onPress={() => alert("Login")}
+                        onPress={() => { loginHandler(data.phone, data.password) }}
                         style={[styles.signIn, {
                             borderColor: '#3CB371',
                             marginTop: 20,
@@ -91,7 +125,7 @@ export const LoginScreen = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => alert("To sign up screen")}
+                        onPress={() => navigation.navigate("Register")}
                         style={[styles.signIn, {
                             borderColor: '#009387',
                             borderWidth: 1,
@@ -112,7 +146,8 @@ const height_logo = height * 0.28;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#009387"
+        backgroundColor: "#009387",
+        // marginBottom: 50
     },
     header: {
         flex: 1,

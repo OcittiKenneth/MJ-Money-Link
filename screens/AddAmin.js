@@ -1,59 +1,22 @@
-import React, { useContext, useState } from "react";
-import { View, ScrollView, Text, StyleSheet, Button, TouchableOpacity, Dimensions, TextInput, StatusBar } from 'react-native';
-
+import React, { useState } from "react";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, StatusBar } from 'react-native';
+import * as animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import * as animatable from 'react-native-animatable';
-import { NavigationContainer } from "@react-navigation/native";
-import { AuthContext } from "../components/Context";
+
 import { Picker } from "@react-native-picker/picker";
-// import DateTimePicker from '@react-native-community/datetimepicker';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { MyClients } from "../Data";
 
 
 
-export const Register = ({ navigation }) => {
-
-    const { signUp } = useContext(AuthContext);
-
+export const AddAmin = ({ buttonTitle }) => {
 
     const [data, setData] = React.useState({
         phone: '',
-        password: "",
-        secureTextEntry: true,
-        confirm_secureTextEntry: true,
-        userName: "",
-        firstName: "",
-        lastName: "",
-        dateOfBirth: '',
-        idNumber: "",
-        idType: "",
-        address: '',
-        email: ""
+        name: "",
+        admin: ""
     })
-    const [date, setDate] = useState(new Date(1598051730000));
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
 
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(Platform.IOS === 'ios');
-        setDate(currentDate);
-    };
-
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
-    };
-
-    const showDatepicker = () => {
-        showMode('date');
-    };
-
-
-    const registerHandler = (data) => {
-        signUp(data);
-    }
 
     const textInputChange = (val) => {
         return (
@@ -123,40 +86,16 @@ export const Register = ({ navigation }) => {
         )
     }
 
-    const handlePasswordChange = (val) => {
 
-        setData({
-            ...data,
-            password: val
-        })
-    }
-    const handleForgotPasswordChange = (val) => {
-        setData({
-            ...data,
-            forgot_password: val
-        })
-    }
 
-    const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
-        })
-    }
 
-    const updateConfimrSecureTextEntry = () => {
-        setData({
-            ...data,
-            confirm_secureTextEntry: !data.confirm_secureTextEntry
-        })
-    }
+
+
 
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
-            <View style={styles.header}>
-                <Text style={[styles.text_header, { marginBottom: -35, marginTop: 30, fontWeight: "normal" }]}>Register Now! </Text>
-            </View >
+
             <ScrollView style={styles.footer}>
                 <animatable.View>
                     <Text style={styles.textFooter}>Phone</Text>
@@ -170,27 +109,11 @@ export const Register = ({ navigation }) => {
                         />
                     </View>
 
-                    <Text style={styles.textFooter}>Date</Text>
-                    <View>
-                        <Button onPress={showDatepicker} title="show date picker" />
-                    </View>
-                    {show && (
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={date}
-                            mode={mode}
-                            dateFormat="day month year"
-                            is24Hour={true}
-                            display="default"
-                            onChange={onChange}
-                        />
-                    )}
-
                     <Text style={styles.textFooter}>User Name</Text>
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color="#05375a" size={20} />
                         <TextInput
-                            keyboardType="numeric"
+                            keyboardType="default"
                             style={styles.textInput}
                             placeholder="User Number"
                             onChangeText={(val) => handleUserName(val)}
@@ -201,7 +124,7 @@ export const Register = ({ navigation }) => {
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color="#05375a" size={20} />
                         <TextInput
-                            keyboardType="numeric"
+                            keyboardType="default"
                             style={styles.textInput}
                             placeholder="First Number"
                             onChangeText={(val) => handleFisrtName(val)}
@@ -212,7 +135,7 @@ export const Register = ({ navigation }) => {
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color="#05375a" size={20} />
                         <TextInput
-                            keyboardType="numeric"
+                            keyboardType="default"
                             style={styles.textInput}
                             placeholder="First Number"
                             onChangeText={(val) => handleLastName(val)}
@@ -227,11 +150,10 @@ export const Register = ({ navigation }) => {
                                 onChangeIDType(itemValue)
                             }>
                             <Picker.Item label="Select ID Type" value="id-type" />
-                            <Picker.Item label="PASSPORT" value="PASSPORT" />
-                            <Picker.Item label="REFUGEE_LICENCE" value="REFUGEE_LICENCE" />
-                            <Picker.Item label="DRIVER_LICENCE" value="DRIVER_LICENCE" />
-                            <Picker.Item label="EMPLOYEE_ID" value="EMPLOYEE_ID" />
-                            <Picker.Item label="NATIONAL_ID" value="NATIONAL_ID" />
+                            <Picker.Item label="Passport" value="Passport" />
+                            <Picker.Item label="Student" value="student" />
+                            <Picker.Item label="Driver Permit" value="driver" />
+                            <Picker.Item label="National ID" value="national-id" />
                         </Picker>
                     </View>
 
@@ -239,7 +161,7 @@ export const Register = ({ navigation }) => {
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color="#05375a" size={20} />
                         <TextInput
-                            keyboardType="numeric"
+                            keyboardType="default"
                             style={styles.textInput}
                             placeholder="ID Number"
                             onChangeText={(val) => handleIDNumber(val)}
@@ -250,7 +172,7 @@ export const Register = ({ navigation }) => {
                     <View style={styles.action}>
                         <FontAwesome name="user-o" color="#05375a" size={20} />
                         <TextInput
-                            keyboardType="numeric"
+                            keyboardType="default"
                             style={styles.textInput}
                             placeholder="Address"
                             onChangeText={(val) => handleAddress(val)}
@@ -268,73 +190,27 @@ export const Register = ({ navigation }) => {
                         />
                     </View>
 
-                    <Text style={[styles.textFooter, { marginTop: 30 }]}>Password</Text>
-                    <View style={styles.action}>
-                        <FontAwesome name="lock" color="#05375a" size={20} />
-                        <TextInput
-                            secureTextEntry={data.secureTextEntry ? true : false}
-                            style={styles.textInput}
-                            placeholder="Password"
-                            onChangeText={(val) => handlePasswordChange(val)}
-                        />
-                        <TouchableOpacity onPress={updateSecureTextEntry}>
-                            {data.secureTextEntry ?
-                                <Feather name="eye-off" color="gray" size={20} />
-                                :
-                                <Feather name="eye" color="gray" size={20} />
-                            }
-                        </TouchableOpacity>
-                    </View>
-
                     <View style={styles.button}>
                         <TouchableOpacity
-                            onPress={() => { registerHandler(data.phone, data.password,) }}
+                            onPress={() => alert("Add Transaction")}
                             style={[styles.signIn, {
-                                // borderColor: '#3CB371',
-                                marginTop: 10,
+                                borderColor: '#3CB371',
+                                marginTop: 20,
                                 backgroundColor: "#3CB371"
                             }]}
                         >
-                            <Text style={[styles.textSign, { color: "#fff" }]}>Sign Up</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("Login")}
-                            style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
-                                marginTop: 15
-                            }]}
-                        >
-                            <Text style={[styles.textSign], { color: "#009387" }}>Sign In</Text>
+                            <Text style={[styles.textSign, { color: "#fff" }]}>{buttonTitle}</Text>
                         </TouchableOpacity>
                     </View>
                 </animatable.View>
             </ScrollView>
-
         </View>
     )
 }
 
-const { height } = Dimensions.get("screen");
-const height_logo = height * 0.28;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#009387"
-    },
-    header: {
-        flex: 0.2,
-        justifyContent: "flex-end",
-        paddingBottom: 50,
-        paddingHorizontal: 20
-    },
-    text_header: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 30,
-        marginTop: 10
     },
     pickerView: {
         borderRadius: 10,
